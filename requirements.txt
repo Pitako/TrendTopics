@@ -1,6 +1,6 @@
-python pip install seaborn
-python pip install pandas
-python pip install matplotlib
-python pip install numpy
+seaborn
+pandas
+matplotlib
+numpy
 
 
