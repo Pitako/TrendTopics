@@ -47,50 +47,6 @@ diaQTD['diaSemana'] = diaQTD.apply(lambda row: DIAS[int(row.nDiaSemana)], axis=1
 horaQTD = diaHora.groupby(by=['hora'], as_index=False).qtd.agg('mean')
 
 
-#layout dados completos
-
-completo = st.beta_expander("Histórico completo", expanded=True )
-
-#tit1 = completo.beta_columns(2)
-#tit1[0].write('Soma de observações das hashtags por dia')
-
-completo.markdown('### Soma de ocorrência das hashtags por dia')
-
-
-colComp1, colComp2 = completo.beta_columns([1,4])
-colComp1.write(' ') # pra alinhar gráfico com tabela
-colComp1.write(diaMes.style.format({'qtd': '{:,.2f}'}))
-colComp2.pyplot(f)
-
-#gráfico de quantidade média por dia
-completo.markdown('### Média de ocorrência por dia da semana e por hora do dia')
-
-colComp21, colComp22 = completo.beta_columns([1,1])
-fig, ax = plt.subplots(figsize=(10, 5))
-plt.bar(diaQTD.diaSemana,diaQTD.qtd)
-colComp21.pyplot(fig)
-
-#gráfico de quantidade por hora
-fig, ax = plt.subplots(figsize=(10, 5))
-plt.bar(horaQTD.hora,horaQTD.qtd)
-colComp22.pyplot(fig)
-
-#gráfico de linhas pra cada dia da semana por hora
-completo.markdown('### Média das ocorrências por hora do dia em cada dia da semana')
-
-fig, ax = plt.subplots(figsize=(15, 7))
-sns.lineplot(data=diaHora, x=diaHora.hora,  y=diaHora.qtd, hue=diaHora.diaSemana ,ci=None, legend="full")
-completo.pyplot(fig)
-
-
-#gráfico heatmap
-fig, ax = plt.subplots(figsize=(15, 10))
-sns.heatmap(diahoratabela, cmap='YlGnBu', annot=True, fmt=".2f", vmin=diaHora.qtd.min(), vmax=diaHora.qtd.max(), linewidths=0.5, linecolor='white', cbar=False)
-plt.xticks(np.arange(7) + .5, labels=DIAS)
-ax.xaxis.tick_top()
-completo.pyplot(fig)
-
-
 
 
 datasSelecionadas = st.sidebar.date_input("Datas", min_value=diaMes.dma.min(), max_value=diaMes.dma.max(), value=[])
@@ -156,3 +112,46 @@ if datasSelecionadas != () :
     containerFiltrado.pyplot(f)
 
     
+    
+#layout dados completos
+completo = st.beta_expander("Histórico completo", expanded=True )
+
+#tit1 = completo.beta_columns(2)
+#tit1[0].write('Soma de observações das hashtags por dia')
+
+completo.markdown('### Soma de ocorrência das hashtags por dia')
+
+
+colComp1, colComp2 = completo.beta_columns([1,4])
+colComp1.write(' ') # pra alinhar gráfico com tabela
+colComp1.write(diaMes.style.format({'qtd': '{:,.2f}'}))
+colComp2.pyplot(f)
+
+#gráfico de quantidade média por dia
+completo.markdown('### Média de ocorrência por dia da semana e por hora do dia')
+
+colComp21, colComp22 = completo.beta_columns([1,1])
+fig, ax = plt.subplots(figsize=(10, 5))
+plt.bar(diaQTD.diaSemana,diaQTD.qtd)
+colComp21.pyplot(fig)
+
+#gráfico de quantidade por hora
+fig, ax = plt.subplots(figsize=(10, 5))
+plt.bar(horaQTD.hora,horaQTD.qtd)
+colComp22.pyplot(fig)
+
+#gráfico de linhas pra cada dia da semana por hora
+completo.markdown('### Média das ocorrências por hora do dia em cada dia da semana')
+
+fig, ax = plt.subplots(figsize=(15, 7))
+sns.lineplot(data=diaHora, x=diaHora.hora,  y=diaHora.qtd, hue=diaHora.diaSemana ,ci=None, legend="full")
+completo.pyplot(fig)
+
+
+#gráfico heatmap
+fig, ax = plt.subplots(figsize=(15, 10))
+sns.heatmap(diahoratabela, cmap='YlGnBu', annot=True, fmt=".2f", vmin=diaHora.qtd.min(), vmax=diaHora.qtd.max(), linewidths=0.5, linecolor='white', cbar=False)
+plt.xticks(np.arange(7) + .5, labels=DIAS)
+ax.xaxis.tick_top()
+completo.pyplot(fig)
+
