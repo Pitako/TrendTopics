@@ -31,8 +31,8 @@ df['dma'] = pd.to_datetime(df['dma'])
 diaMes = df.groupby(by=['dma'], as_index=False).qtd.agg('sum')
 
 #gráfico com todos os dias
-f, ax = plt.subplots(figsize=(15, 4))
-sns.lineplot(x=diaMes.dma, y=diaMes.qtd, ci=None, ax=ax)
+f1, ax = plt.subplots(figsize=(15, 4))
+sns.lineplot(x=diaMes.dma, y=diaMes.qtd, ci=None, ax=ax, markers='o' )
 
 #dados agrupados por dia e hora
 diaHora = df.groupby(by=['nDiaSemana','diaSemana','hora'], as_index=False).qtd.agg('mean')
@@ -107,7 +107,7 @@ if datasSelecionadas != () :
 
     containerFiltrado.markdown("### Soma das ocorrências das hashtags por dia")
     f, ax = plt.subplots(figsize=(15, 5))
-    sns.lineplot(x=diaMesFiltrado.dma, y=diaMesFiltrado.qtd, ci=None, ax=ax)
+    sns.lineplot(x=diaMesFiltrado.dma, y=diaMesFiltrado.qtd, ci=None, ax=ax, markers='o')
 
     containerFiltrado.pyplot(f)
 
@@ -125,27 +125,27 @@ completo.markdown('### Soma de ocorrência das hashtags por dia')
 colComp1, colComp2 = completo.beta_columns([1,4])
 colComp1.write(' ') # pra alinhar gráfico com tabela
 colComp1.write(diaMes.style.format({'qtd': '{:,.2f}'}))
-colComp2.pyplot(f)
+colComp2.pyplot(f1)
 
 #gráfico de quantidade média por dia
 completo.markdown('### Média de ocorrência por dia da semana e por hora do dia')
 
 colComp21, colComp22 = completo.beta_columns([1,1])
-fig, ax = plt.subplots(figsize=(10, 5))
+fig1, ax = plt.subplots(figsize=(10, 5))
 plt.bar(diaQTD.diaSemana,diaQTD.qtd)
-colComp21.pyplot(fig)
+colComp21.pyplot(fig1)
 
 #gráfico de quantidade por hora
-fig, ax = plt.subplots(figsize=(10, 5))
+fig2, ax = plt.subplots(figsize=(10, 5))
 plt.bar(horaQTD.hora,horaQTD.qtd)
-colComp22.pyplot(fig)
+colComp22.pyplot(fig2)
 
 #gráfico de linhas pra cada dia da semana por hora
 completo.markdown('### Média das ocorrências por hora do dia em cada dia da semana')
 
-fig, ax = plt.subplots(figsize=(15, 7))
+fig3, ax = plt.subplots(figsize=(15, 7))
 sns.lineplot(data=diaHora, x=diaHora.hora,  y=diaHora.qtd, hue=diaHora.diaSemana ,ci=None, legend="full")
-completo.pyplot(fig)
+completo.pyplot(fig3)
 
 
 #gráfico heatmap
