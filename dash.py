@@ -26,7 +26,9 @@ st.title("Análise de TrendTopics do Twitter")
 
 df = pd.read_csv('trendsTratados.csv')
  
-df['dma'] = pd.to_datetime(df['dma'])
+#df['dma'] = pd.to_datetime(df['dma'])
+df['dma'] = df.apply(lambda row: date.datetime.strptime(row.dma,'%Y-%m-%d'), axis=1)
+df['dma'] = df.apply(lambda row: row.dma.date() , axis=1)
 
 diaMes = df.groupby(by=['dma'], as_index=False).qtd.agg('sum')
 
