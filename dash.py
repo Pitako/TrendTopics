@@ -1,3 +1,4 @@
+from time import time, timezone
 import streamlit as st
 import pandas as pd
 #import pydeck as pdk
@@ -5,6 +6,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 import datetime as date
 import numpy as np
+import os
 
 DIAS = [
     'Segunda-feira',
@@ -15,6 +17,9 @@ DIAS = [
     'Sábado',
     'Domingo'
 ]
+
+os.environ['TZ'] = 'America/Sao_Paulo'
+
 
 pd.options.display.float_format = '{:,.2f}'.format
 
