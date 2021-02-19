@@ -1,4 +1,3 @@
-from time import time, timezone
 import streamlit as st
 import pandas as pd
 #import pydeck as pdk
@@ -6,7 +5,7 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 import datetime as date
 import numpy as np
-import os
+
 
 DIAS = [
     'Segunda-feira',
@@ -18,8 +17,6 @@ DIAS = [
     'Domingo'
 ]
 
-os.environ['TZ'] = 'America/Sao_Paulo'
-
 
 pd.options.display.float_format = '{:,.2f}'.format
 
@@ -29,7 +26,7 @@ st.set_page_config(page_title="TrendTopics ", layout="wide")
 
 st.title("Análise de TrendTopics do Twitter")  
 
-df = pd.read_csv('trendsTratados.csv')
+df = pd.read_csv('trendsTratados.csv', decimal=',', sep=';')
  
 #df['dma'] = pd.to_datetime(df['dma'])
 df['dma'] = df.apply(lambda row: date.datetime.strptime(row.dma,'%Y-%m-%d'), axis=1)
