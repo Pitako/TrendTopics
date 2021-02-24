@@ -51,7 +51,7 @@ diaQTD['diaSemana'] = diaQTD.apply(lambda row: DIAS[int(row.nDiaSemana)], axis=1
 horaQTD = diaHora.groupby(by=['hora'], as_index=False).qtd.agg('mean')
 
 
-
+st.sidebar.markdown("#### Escolha uma data para filtrar os trendtopics")
 
 datasSelecionadas = st.sidebar.date_input("Datas", min_value=diaMes.dma.min(), max_value=diaMes.dma.max(), value=[])
 
