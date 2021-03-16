@@ -25,6 +25,10 @@ st.set_page_config(page_title="TrendTopics ", layout="wide")
 
 
 st.title("Análise de TrendTopics do Twitter")  
+st.write("[Como se comporta o TrendTopics do Twitter ? (1) — Contextualização](https://robertosavio.medium.com/como-se-comporta-o-trendtopics-do-twitter-1-contextualiza%C3%A7%C3%A3o-9d7c6b8ca395)")
+st.write("[Como se comporta o TrendTopics do Twitter ? (2) — Código, tratamento e visão geral dos dados](https://robertosavio.medium.com/como-se-comporta-o-trendtopics-do-twitter-2-c%C3%B3digo-tratamento-e-vis%C3%A3o-geral-dos-dados-47b128f4ddb2)")
+st.write("[Como se comporta o TrendTopics do Twitter ? (3) — Criação do dashboard e exploração dos dados](https://robertosavio.medium.com/como-se-comporta-o-trendtopics-do-twitter-3-cria%C3%A7%C3%A3o-do-dashboard-e-explora%C3%A7%C3%A3o-dos-dados-edf34c389bc6)")
+
 
 df = pd.read_csv('trendsTratados.csv', decimal=',', sep=';')
  
