@@ -107,7 +107,7 @@ if datasSelecionadas != () :
 
     containerFiltrado = st.beta_expander("Dados filtrados", expanded=True)
 
-    c1, c2, c3 = containerFiltrado.columns([2,3,4])
+    c1, c2, c3 = containerFiltrado.beta_columns([2,3,4])
 
     c1.markdown("### Tweets no dia")
     c1.write(diaMesFiltrado.sort_values(by='qtd', ascending=False).set_index('dma').style.format({'qtd': '{:,.2f}'}))
