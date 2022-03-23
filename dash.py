@@ -6,6 +6,10 @@ from matplotlib import pyplot as plt
 import datetime as date
 import numpy as np
 
+import plotly.express as px
+import plotly.graph_objects as go
+
+sns.set_theme()
 
 DIAS = [
     'Segunda-feira',
@@ -17,10 +21,16 @@ DIAS = [
     'Domingo'
 ]
 
+st.set_page_config(page_title="TrendTopics ", layout="wide")
+
+
+norm=1000000
+ndias = 10
+
 
 pd.options.display.float_format = '{:,.2f}'.format
 
-st.set_page_config(page_title="TrendTopics ", layout="wide")
+
 
 
 
@@ -37,10 +47,6 @@ df['dma'] = df.apply(lambda row: date.datetime.strptime(row.dma,'%Y-%m-%d'), axi
 df['dma'] = df.apply(lambda row: row.dma.date() , axis=1)
 
 diaMes = df.groupby(by=['dma'], as_index=False).qtd.agg('sum')
-
-#gráfico com todos os dias
-f1, ax = plt.subplots(figsize=(15, 4))
-sns.lineplot(x=diaMes.dma, y=diaMes.qtd, ci=None, ax=ax, markers='o' )
 
 #dados agrupados por dia e hora
 diaHora = df.groupby(by=['nDiaSemana','diaSemana','hora'], as_index=False).qtd.agg('mean')
@@ -99,46 +105,58 @@ if datasSelecionadas != () :
 
     maioresHashs = ttFiltrado.groupby(by=['hashtag'], as_index=False).qtd.agg('sum')
 
-    containerFiltrado = st.beta_expander("Dados filtrados", expanded=True)
+    containerFiltrado = st.expander("Dados filtrados", expanded=True)
 
-    c1, c2, c3 = containerFiltrado.beta_columns([2,3,4])
+    c1, c2, c3 = containerFiltrado.columns([2,3,4])
 
-    c1.markdown("### Dias selecionados")
-    c1.write(diaMesFiltrado.style.format({'qtd': '{:,.2f}'}))
+    c1.markdown("### Tweets no dia")
+    c1.write(diaMesFiltrado.sort_values(by='qtd', ascending=False).set_index('dma').style.format({'qtd': '{:,.2f}'}))
     
-    c2.markdown("### Maiores hashtags")
-    c2.write(maioresHashs.sort_values(by='qtd', ascending=False).style.format({'qtd': '{:,.2f}'}))
+    c2.markdown("### Maiores hashtags no período")
+    c2.write(maioresHashs.sort_values(by='qtd', ascending=False).set_index('hashtag').style.format({'qtd': '{:,.2f}'}))
 
-    c3.markdown("### TrendTopics")
-    c3.write(ttFiltrado[['dma','hora','hashtag','qtd']].sort_values(by=['dma','hora']).style.format({'qtd': '{:,.2f}'}))
+    c3.markdown("### TrendTopics (100 maiores hastags em um hora)")
+    c3.write(ttFiltrado[['dma','hora','hashtag','qtd']].sort_values(by='qtd', ascending=False).head(100).set_index('dma').style.format({'qtd': '{:,.2f}'}))    
 
 
     containerFiltrado.markdown("### Soma das ocorrências das hashtags por dia")
-    f, ax = plt.subplots(figsize=(15, 5))
-    sns.lineplot(x=diaMesFiltrado.dma, y=diaMesFiltrado.qtd, ci=None, ax=ax, markers='o')
+        
+    figpx2 = go.Figure()
+    figpx2.add_trace(go.Scatter(x=diaMesFiltrado['dma'], y=diaMesFiltrado['qtd'], name='Qtd', line=dict(color='#888888', width=2)))
+    figpx2.add_trace(go.Scatter(x=diaMesFiltrado['dma'], y=diaMesFiltrado.qtd.rolling(ndias).mean(), name='Média Móvel',  line=dict(color='firebrick', width=5)))
+    figpx2.update_layout(height=350, autosize=True, margin=dict(b=10, l=10, r=10, t=10) )
 
-    containerFiltrado.pyplot(f)
+    containerFiltrado.plotly_chart(figpx2, use_container_width=True)
 
-    
+
+   
     
 #layout dados completos
-completo = st.beta_expander("Histórico completo", expanded=True )
+completo = st.expander("Histórico completo", expanded=True )
 
-#tit1 = completo.beta_columns(2)
+#tit1 = completo.columns(2)
 #tit1[0].write('Soma de observações das hashtags por dia')
 
 completo.markdown('### Soma de ocorrência das hashtags por dia')
 
 
-colComp1, colComp2 = completo.beta_columns([1,4])
+colComp1, colComp2 = completo.columns([1,4])
 colComp1.write(' ') # pra alinhar gráfico com tabela
-colComp1.write(diaMes.style.format({'qtd': '{:,.2f}'}))
-colComp2.pyplot(f1)
+colComp1.write(diaMes.sort_values(by='qtd', ascending=False).head(100).set_index('dma').style.format({'qtd': '{:,.2f}'}))
+
+diaMes['mm'] = diaMes.rolling(ndias).mean()
+
+figpx = go.Figure()
+figpx.add_trace(go.Scatter(x=diaMes['dma'], y=diaMes['qtd'], name='Qtd', line=dict(color='#888888', width=2)))
+figpx.add_trace(go.Scatter(x=diaMes['dma'], y=diaMes['mm'], name='Média Móvel',  line=dict(color='firebrick', width=5)))
+figpx.update_layout(height=350, autosize=True, margin=dict(b=10, l=10, r=10, t=10) )
+
+colComp2.plotly_chart(figpx, use_container_width=True)
 
 #gráfico de quantidade média por dia
 completo.markdown('### Média de ocorrência por dia da semana e por hora do dia')
 
-colComp21, colComp22 = completo.beta_columns([1,1])
+colComp21, colComp22 = completo.columns([1,1])
 fig1, ax = plt.subplots(figsize=(10, 5))
 plt.bar(diaQTD.diaSemana,diaQTD.qtd)
 colComp21.pyplot(fig1)
@@ -151,9 +169,12 @@ colComp22.pyplot(fig2)
 #gráfico de linhas pra cada dia da semana por hora
 completo.markdown('### Média das ocorrências por hora do dia em cada dia da semana')
 
-fig3, ax = plt.subplots(figsize=(15, 7))
-sns.lineplot(data=diaHora, x=diaHora.hora,  y=diaHora.qtd, hue=diaHora.diaSemana ,ci=None, legend="full")
-completo.pyplot(fig3)
+# fig3, ax = plt.subplots(figsize=(15, 7))
+# sns.lineplot(data=diaHora, x=diaHora.hora,  y=diaHora.qtd, hue=diaHora.diaSemana ,ci=None, legend="full")
+figdiaS = px.line(diaHora,x='hora', y='qtd', color='diaSemana')
+figdiaS.update_layout( margin=dict(b=10, l=10, r=10, t=10) )
+
+completo.plotly_chart(figdiaS, use_container_width=True)
 
 
 #gráfico heatmap
