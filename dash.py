@@ -140,7 +140,7 @@ completo = st.beta_expander("Histórico completo", expanded=True )
 completo.markdown('### Soma de ocorrência das hashtags por dia')
 
 
-colComp1, colComp2 = completo.columns([1,4])
+colComp1, colComp2 = completo.beta_columns([1,4])
 colComp1.write(' ') # pra alinhar gráfico com tabela
 colComp1.write(diaMes.sort_values(by='qtd', ascending=False).head(100).set_index('dma').style.format({'qtd': '{:,.2f}'}))
 
@@ -156,7 +156,7 @@ colComp2.plotly_chart(figpx, use_container_width=True)
 #gráfico de quantidade média por dia
 completo.markdown('### Média de ocorrência por dia da semana e por hora do dia')
 
-colComp21, colComp22 = completo.columns([1,1])
+colComp21, colComp22 = completo.beta_columns([1,1])
 fig1, ax = plt.subplots(figsize=(10, 5))
 plt.bar(diaQTD.diaSemana,diaQTD.qtd)
 colComp21.pyplot(fig1)
