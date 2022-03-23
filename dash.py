@@ -105,7 +105,7 @@ if datasSelecionadas != () :
 
     maioresHashs = ttFiltrado.groupby(by=['hashtag'], as_index=False).qtd.agg('sum')
 
-    containerFiltrado = st.expander("Dados filtrados", expanded=True)
+    containerFiltrado = st.beta_expander("Dados filtrados", expanded=True)
 
     c1, c2, c3 = containerFiltrado.columns([2,3,4])
 
@@ -132,7 +132,7 @@ if datasSelecionadas != () :
    
     
 #layout dados completos
-completo = st.expander("Histórico completo", expanded=True )
+completo = st.beta_expander("Histórico completo", expanded=True )
 
 #tit1 = completo.columns(2)
 #tit1[0].write('Soma de observações das hashtags por dia')
