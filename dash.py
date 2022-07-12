@@ -9,6 +9,8 @@ import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
 
+import os
+
 sns.set_theme()
 
 DIAS = [
@@ -40,7 +42,15 @@ st.write("[Como se comporta o TrendTopics do Twitter ? (2) — Código, tratamen
 st.write("[Como se comporta o TrendTopics do Twitter ? (3) — Criação do dashboard e exploração dos dados](https://robertosavio.medium.com/como-se-comporta-o-trendtopics-do-twitter-3-cria%C3%A7%C3%A3o-do-dashboard-e-explora%C3%A7%C3%A3o-dos-dados-edf34c389bc6)")
 
 
-df = pd.read_csv('trendsTratados.csv', decimal=',', sep=';')
+
+df = pd.DataFrame()
+
+dir_list= os.listdir('.')
+for i in range(len(dir_list)):
+    filename = dir_list[i]
+    if filename.endswith('.csv'):
+        df.append(pd.read_csv(filename, decimal=',', sep=';'))
+        
  
 #df['dma'] = pd.to_datetime(df['dma'])
 df['dma'] = df.apply(lambda row: date.datetime.strptime(row.dma,'%Y-%m-%d'), axis=1)
