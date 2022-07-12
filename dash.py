@@ -1,3 +1,4 @@
+from typing import Tuple
 import streamlit as st
 import pandas as pd
 #import pydeck as pdk
@@ -49,9 +50,12 @@ dir_list= os.listdir('.')
 for i in range(len(dir_list)):
     filename = dir_list[i]
     if filename.endswith('.csv'):
-        df.append(pd.read_csv(filename, decimal=',', sep=';'))
+        dfapp = pd.read_csv(filename, decimal=',', sep=';')
+        df = df.append(dfapp, ignore_index=True)
         
- 
+
+df.reset_index(drop=True, inplace=True)
+
 #df['dma'] = pd.to_datetime(df['dma'])
 df['dma'] = df.apply(lambda row: date.datetime.strptime(row.dma,'%Y-%m-%d'), axis=1)
 df['dma'] = df.apply(lambda row: row.dma.date() , axis=1)
@@ -126,7 +130,7 @@ if datasSelecionadas != () :
     c2.write(maioresHashs.sort_values(by='qtd', ascending=False).set_index('hashtag').style.format({'qtd': '{:,.2f}'}))
 
     c3.markdown("### TrendTopics (100 maiores hastags em um hora)")
-    c3.write(ttFiltrado[['dma','hora','hashtag','qtd']].sort_values(by='qtd', ascending=False).head(100).set_index('dma').style.format({'qtd': '{:,.2f}'}))    
+    c3.write(ttFiltrado[['dma','hora','hashtag','qtd']].sort_values(by='qtd', ascending=False).head(100).reset_index().style.format({'qtd': '{:,.2f}'}))    
 
 
     containerFiltrado.markdown("### Soma das ocorrências das hashtags por dia")
