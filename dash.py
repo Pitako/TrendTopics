@@ -51,7 +51,7 @@ for i in range(len(dir_list)):
     filename = dir_list[i]
     if filename.endswith('.csv'):
         dfapp = pd.read_csv(filename, decimal=',', sep=';')
-        df = df.append(dfapp, ignore_index=True)
+        df = df.concat(dfapp, ignore_index=True)
         
 
 df.reset_index(drop=True, inplace=True)
